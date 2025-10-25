@@ -45,16 +45,25 @@ pip3 install -r requirements.txt
 ```
 
 ### 2. Calibrate Coordinates
-On a new computer, run the coordinate calibrator:
+Run the coordinate calibrator - it will automatically:
+1. Check if cliclick is installed
+2. Open Google Chrome to a test search page
+3. Guide you through calibrating all coordinates
+
 ```bash
-cd ~/Dropbox/job_search_automation
-python3 coordinate_calibrator.py
+cd job-search-automation
+python3 tools/coordinate_calibrator.py
 ```
 
-Follow the interactive prompts to capture new coordinates for:
-- Console click position
-- Next page button
-- Any other click positions
+**What will happen:**
+- The tool will check for required dependencies
+- Google Chrome will open to a test search page
+- You'll be guided to hover your mouse in 5 locations:
+  - Console input field (for JavaScript execution)
+  - Console output area (for copying results)
+  - Google search page focus area
+  - Google search "Next" button
+- All scripts will be automatically updated with new coordinates
 
 ### 3. Update Scripts
 After calibration, update the coordinates in the AppleScript files:
