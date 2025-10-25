@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Interactive Coordinate Calibrator for Job Search Automation
-This script helps find and reprogram XY coordinates for AppleScript automation.
+Job Search Automation - Coordinate Calibrator
+Automatically calibrates all coordinates for job search automation scripts.
 """
 
 import os
@@ -12,16 +12,33 @@ import sys
 # Coordinate descriptions for each script
 COORDINATE_DESCRIPTIONS = {
     "focus_and_execute_console.applescript": [
-        ("Console input field", "🔹 OPEN DEV TOOLS (Shift+Cmd+C) then click at bottom of console where you type commands")
+        ("Console input field", "🔹 OPEN DEV TOOLS (Shift+Cmd+C) then hover at bottom of console where you type commands")
     ],
     "copy_console_results.applescript": [
-        ("Console output area", "🔹 Click in the LEFT COLUMN to the left of console text (where line numbers appear)")
+        ("Console output area", "🔹 Hover in the LEFT COLUMN to the left of console text (where line numbers appear)")
     ],
     "navigate_google_search.applescript": [
-        ("Page focus", "🔹 LOAD A GOOGLE SEARCH then click at the TOP or where there ISN'T text to focus the page"),
-        ("Next page", "🔹 SCROLL DOWN TO BOTTOM and click on the 'Next' button")
+        ("Page focus", "🔹 LOAD A GOOGLE SEARCH then hover at the TOP or where there ISN'T text to focus the page"),
+        ("Next page", "🔹 SCROLL DOWN TO BOTTOM and hover over the 'Next' button")
     ]
 }
+
+def check_cliclick_installed():
+    """Check if cliclick is installed and provide installation instructions"""
+    try:
+        result = subprocess.run(['which', 'cliclick'], capture_output=True, text=True)
+        if result.returncode == 0:
+            return True
+        else:
+            print("⚠️  cliclick is not installed!")
+            print("\nTo install cliclick:")
+            print("  brew install cliclick")
+            print("\nOr download from: https://www.bluem.net/en/mac/cliclick/")
+            print("\nWithout cliclick, coordinate calibration will not work.")
+            return False
+    except Exception as e:
+        print(f"Error checking for cliclick: {e}")
+        return False
 
 def get_mouse_position():
     """Get current mouse position using cliclick"""
@@ -61,21 +78,6 @@ def find_coordinates_in_script(script_path):
 
     # Combine both types of coordinates
     coordinates = direct_coordinates + variable_coordinates
-
-    script_name = os.path.basename(script_path)
-    descriptions = COORDINATE_DESCRIPTIONS.get(script_name, [])
-
-    print(f"\n=== {script_name} ===")
-    for i, (x, y) in enumerate(coordinates):
-        if i < len(descriptions):
-            title, desc = descriptions[i]
-            print(f"  {i+1}. {title}")
-            print(f"     Current: ({x}, {y})")
-            print(f"     Purpose: {desc}")
-        else:
-            print(f"  {i+1}. Unknown coordinate")
-            print(f"     Current: ({x}, {y})")
-
     return coordinates
 
 def update_coordinates(script_path, old_coords, new_coords):
@@ -107,8 +109,6 @@ def update_coordinates(script_path, old_coords, new_coords):
     with open(script_path, 'w') as f:
         f.write(content)
 
-    print(f"\nUpdated coordinates in {os.path.basename(script_path)}")
-
 def interactive_calibration_for_script(script_name, current_coords):
     """Interactive coordinate calibration for a specific script"""
     print(f"\n=== Calibrating {script_name} ===")
@@ -138,81 +138,44 @@ def interactive_calibration_for_script(script_name, current_coords):
 
     return new_coords
 
-def calibrate_specific_script(applescript_files, all_coordinates, scripts_dir):
-    """Handle script-specific calibration"""
-    while True:
-        print("\n=== Select Script to Calibrate ===")
-        for i, script in enumerate(applescript_files, 1):
-            print(f"  {i}. {script}")
-        print("  b. Back to main menu")
-
-        choice = input("\nEnter script number or 'b': ").strip().lower()
-
-        if choice == 'b':
-            return
-
-        try:
-            script_choice = int(choice) - 1
-            if 0 <= script_choice < len(applescript_files):
-                selected_script = applescript_files[script_choice]
-                new_coords = interactive_calibration_for_script(
-                    selected_script,
-                    all_coordinates[selected_script]
-                )
-
-                # Ask if user wants to update the script
-                update = input(f"\nUpdate {selected_script} with new coordinates? (y/n): ").lower().strip()
-                if update == 'y':
-                    script_path = os.path.join(scripts_dir, selected_script)
-                    update_coordinates(script_path, all_coordinates[selected_script], new_coords)
-                    all_coordinates[selected_script] = new_coords
-                    print(f"\n✅ {selected_script} has been updated!")
-                else:
-                    print(f"\n❌ {selected_script} was not updated.")
-            else:
-                print("Invalid script number.")
-        except ValueError:
-            print("Please enter a valid number or 'b'.")
-
-def check_cliclick_installed():
-    """Check if cliclick is installed and provide installation instructions"""
+def open_google_chrome_test():
+    """Open Google Chrome to a test search page"""
+    print("\n🔧 Opening Google Chrome to test search...")
     try:
-        result = subprocess.run(['which', 'cliclick'], capture_output=True, text=True)
-        if result.returncode == 0:
-            return True
-        else:
-            print("⚠️  cliclick is not installed!")
-            print("\nTo install cliclick:")
-            print("  brew install cliclick")
-            print("\nOr download from: https://www.bluem.net/en/mac/cliclick/")
-            print("\nWithout cliclick, coordinate calibration will not work.")
-            return False
+        subprocess.run(['open', '-a', 'Google Chrome', 'https://www.google.com/search?q=test+search+for+calibration'])
+        print("✅ Google Chrome opened to test search page")
+        print("\n📝 Instructions:")
+        print("1. Make sure Chrome is the active window")
+        print("2. For console scripts: Open Dev Tools (Shift+Cmd+C)")
+        print("3. Follow the prompts to hover your mouse in each location")
     except Exception as e:
-        print(f"Error checking for cliclick: {e}")
-        return False
+        print(f"❌ Could not open Google Chrome: {e}")
 
 def main():
-    """Main function to help calibrate coordinates"""
-    print("=== Job Search Automation Coordinate Calibrator ===")
-    print("\nThis tool helps you find and update XY coordinates in your AppleScripts.")
+    """Main function - automatically calibrates all scripts"""
+    print("=== Job Search Automation - Coordinate Calibrator ===")
+    print("This tool will automatically calibrate all coordinates for your job search automation.")
 
     # Check if cliclick is installed
     if not check_cliclick_installed():
         print("\n❌ Please install cliclick first and then run this tool again.")
         return
 
-    # Find all AppleScript files (only the 3 main ones)
+    # Open Google Chrome to test search
+    open_google_chrome_test()
+
+    # Find all AppleScript files
     script_dir = os.path.dirname(os.path.abspath(__file__))
     scripts_dir = os.path.join(script_dir, "../scripts")
     applescript_files = [f for f in os.listdir(scripts_dir) if f.endswith('.applescript') and f in COORDINATE_DESCRIPTIONS]
 
     if not applescript_files:
-        print("\nNo AppleScript files found in scripts directory.")
+        print("\n❌ No AppleScript files found in scripts directory.")
         return
 
-    print(f"\nFound {len(applescript_files)} AppleScript files:")
-    for i, script in enumerate(applescript_files, 1):
-        print(f"  {i}. {script}")
+    print(f"\n📁 Found {len(applescript_files)} AppleScript files to calibrate:")
+    for script in applescript_files:
+        print(f"  - {script}")
 
     # Extract coordinates from each file
     all_coordinates = {}
@@ -222,49 +185,25 @@ def main():
         if coords:
             all_coordinates[script] = coords
 
-    while True:
-        print("\n=== Main Menu ===")
-        print("1. View current coordinates")
-        print("2. Calibrate specific script")
-        print("3. Calibrate all scripts")
-        print("4. Exit")
+    print("\n🚀 Starting calibration process...")
+    input("Press ENTER when you're ready to begin calibration...")
 
-        choice = input("\nChoose an option (1-4): ").strip()
+    # Calibrate all scripts
+    for script in applescript_files:
+        if script in all_coordinates:
+            new_coords = interactive_calibration_for_script(script, all_coordinates[script])
 
-        if choice == '1':
-            # Show current coordinates
-            print("\n=== Current Coordinates ===")
-            for script in applescript_files:
-                if script in all_coordinates:
-                    descriptions = COORDINATE_DESCRIPTIONS.get(script, [])
-                    print(f"\n{script}:")
-                    for i, coord in enumerate(all_coordinates[script]):
-                        if i < len(descriptions):
-                            title, desc = descriptions[i]
-                            print(f"  {i+1}. {title}: ({coord[0]}, {coord[1]})")
-                        else:
-                            print(f"  {i+1}. Unknown: ({coord[0]}, {coord[1]})")
+            # Update the script
+            script_path = os.path.join(scripts_dir, script)
+            update_coordinates(script_path, all_coordinates[script], new_coords)
+            all_coordinates[script] = new_coords
+            print(f"✅ {script} updated!")
 
-        elif choice == '2':
-            calibrate_specific_script(applescript_files, all_coordinates, scripts_dir)
-
-        elif choice == '3':
-            print("\nCalibrating all scripts...")
-            for script in applescript_files:
-                if script in all_coordinates:
-                    new_coords = interactive_calibration_for_script(script, all_coordinates[script])
-
-                    # Update the script
-                    script_path = os.path.join(script_dir, script)
-                    update_coordinates(script_path, all_coordinates[script], new_coords)
-                    all_coordinates[script] = new_coords
-                    print(f"✅ {script} updated!")
-
-        elif choice == '4':
-            print("\nGoodbye!")
-            break
-        else:
-            print("Invalid choice. Please try again.")
+    print("\n🎉 All scripts have been calibrated!")
+    print("\n📋 Next steps:")
+    print("1. Test the scripts by running them")
+    print("2. If any coordinates need adjustment, run this tool again")
+    print("3. Happy job searching! 🚀")
 
 if __name__ == "__main__":
     main()
