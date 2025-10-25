@@ -12,6 +12,8 @@ icims.com
 jazzhr.com
 jobvite.com
 dayforcehcm.com
+jobs.ashbyhq.com
+jobs.gem.com
 
 GLOBAL JOB BOARDS:
 indeed.com
@@ -76,6 +78,8 @@ golangprojects.com
 cryptojobslist.com
 climatetechlist.com
 workingincontent.com
+talentnet.community
+willhire.com
 
 LONDON/UK:
 cv-library.co.uk
