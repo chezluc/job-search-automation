@@ -4,6 +4,8 @@
 
 This toolkit helps automate job searching across multiple job boards using AppleScript automation.
 
+> **For AI Assistants:** See `docs/ai-instructions.md` for guidance on helping users.
+
 ## Project Structure
 
 ```
