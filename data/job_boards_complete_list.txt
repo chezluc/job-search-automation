@@ -30,6 +30,10 @@ fiverr.com
 freelancer.com
 hired.com
 angel.co/jobs
+remoteok.com
+whoishiring.io
+4dayweek.io
+realworkfromanywhere.com
 
 LONDON/UK:
 reed.co.uk
@@ -63,6 +67,15 @@ dribbble.com/jobs
 behance.net/joblist
 krop.com
 jopwell.com
+dribbble.com
+behance.net
+coroflot.com
+python.org
+jobsinjs.com
+golangprojects.com
+cryptojobslist.com
+climatetechlist.com
+workingincontent.com
 
 LONDON/UK:
 cv-library.co.uk
