@@ -74,11 +74,17 @@ After calibration, update the coordinates in the AppleScript files:
 
 ## Usage Workflow
 
+### Important Notes:
+- **Scripts work on CURRENT TAB** - Not new tabs (console must already be open)
+- **Search query format**: Use `site:greenhouse.io "job title"` NOT `site:greenhouse.io jobs`
+- **Dev Tools must be open** before running console scripts
+
 ### Basic Job Search
 1. **Navigate to Google search** for job boards using `site:` operator
-2. **Run navigation script** to browse through results
-3. **Extract job links** using console automation
-4. **Copy results** to clipboard for processing
+2. **Open Dev Tools** (Shift+Cmd+C) in the current tab
+3. **Run navigation script** to browse through results
+4. **Extract job links** using console automation
+5. **Copy results** to clipboard for processing
 
 ### Example Search Commands
 ```javascript
